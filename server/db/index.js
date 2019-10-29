@@ -16,12 +16,12 @@ const pool = mysql.createPool({
 let jp_db = {};
 
 const createSellRecordQuery = "INSERT INTO `all_sell_orders` ( \
-    `seller_id`, `device_type_id`, `power_to_sell`, \
+    `seller_id`, `device_type_id`,`user_device_id`, `power_to_sell`, \
         `transfer_start_ts`, `transfer_end_ts`, \
         `rate_per_unit`, `total_amount`,  \
         `order_status_id` \
   ) \
-VALUES ( ?, ?, ?, ?, ?, ?, ?, ?)";
+VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
 
 const searchAvailableBuyOptionsQuery = "SELECT * \
@@ -37,9 +37,9 @@ VALUES (?, ?, ?)";
 
 jp_db.createSellRecord = (sellRequest) => {
     return new Promise((resolve, reject) => {
-        pool.query(createSellRecordQuery, [sellRequest.sellerId, sellRequest.deviceId
-            , sellRequest.powerToSell, sellRequest.transferStartTs, sellRequest.transferEndTs
-            , sellRequest.ratePerUnit, sellRequest.totalAmount, 1], (err, results) => {
+        pool.query(createSellRecordQuery, [sellRequest.sellerId, sellRequest.deviceTypeId
+            , sellRequest.userDeviceId, sellRequest.powerToSell, sellRequest.transferStartTs
+            , sellRequest.transferEndTs, sellRequest.ratePerUnit, sellRequest.totalAmount, 1], (err, results) => {
                 if (err) {
                     return reject(err);
                 } else {

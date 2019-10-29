@@ -17,7 +17,8 @@ router.post('/createSellOrder', async (req, res, next) => {
         //create order record
         let sellRecordPayload = {
             sellerId: req.body.sellerId,
-            deviceId: req.body.deviceId,
+            deviceTypeId: req.body.deviceTypeId,
+            userDeviceId: req.body.userDeviceId,
             powerToSell: req.body.powerToSell,
             transferStartTs: req.body.transferStartTs,
             transferEndTs: req.body.transferEndTs,
