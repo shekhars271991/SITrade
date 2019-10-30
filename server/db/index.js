@@ -31,9 +31,15 @@ WHERE  transfer_start_ts <= ?  \
        AND ( power_to_sell BETWEEN ? AND ? ) \
        AND ( rate_per_unit BETWEEN ? AND ? ) ";
 
+const searchAvailableBuyOptionsQueryTemp = "SELECT * \
+       FROM   all_sell_orders";
+
 const createContractQuery = "INSERT INTO `all_contracts`  \
 (`sell_order_id`, `buyer_id`, `contract_status_id`)  \
 VALUES (?, ?, ?)";
+
+
+const getForecastsQuery = "SELECT * FROM all_forecasts where user_id = ?";
 
 jp_db.createSellRecord = (sellRequest) => {
     return new Promise((resolve, reject) => {
@@ -49,9 +55,21 @@ jp_db.createSellRecord = (sellRequest) => {
     });
 };
 
+jp_db.getForecasts = (userId) => {
+    return new Promise((resolve, reject) => {
+        pool.query(getForecastsQuery, [userId], (err, results) => {
+            if (err) {
+                return reject(err);
+            } else {
+                return resolve(results);
+            }
+        });
+    });
+};
+
 jp_db.searchAvailableBuyOptions = (searchPayload) => {
     return new Promise((resolve, reject) => {
-        pool.query(searchAvailableBuyOptionsQuery, [searchPayload.startTime, searchPayload.endTime
+        pool.query(searchAvailableBuyOptionsQueryTemp, [searchPayload.startTime, searchPayload.endTime
             , searchPayload.unitMin, searchPayload.unitMax, searchPayload.budgetMin
             , searchPayload.budgetMax], (err, results) => {
                 if (err) {
@@ -62,6 +80,8 @@ jp_db.searchAvailableBuyOptions = (searchPayload) => {
             });
     });
 };
+
+
 
 jp_db.createContract = (createContractPayload) => {
     return new Promise((resolve, reject) => {

@@ -102,4 +102,22 @@ router.post('/createContract', async (req, res, next) => {
 
 });
 
+router.post('/getForecasts', async (req, res, next) => {
+
+    try {
+        console.log("fetching forecats for user id:", req.body.userId)
+        let resp = await db.getForecasts(req.body.userId);
+        res.json({
+            msg: "Forecasts successfully fetched.",
+            allForecasts: resp
+        });
+    } catch (e) {
+        console.log(e);
+        res.json({
+            msg: "Something went wrong in creating contract.",
+            errorMessage: e
+        });
+    }
+});
+
 module.exports = router;
